@@ -1,0 +1,9 @@
+Look not thou upon me, for I am naked.
+
+Get some node.js, and npm, and `run sudo npm install -g coffee-script`.
+
+Continuous build command, from the repository root:
+
+    coffee --watch --output js/build --compile coffee/*.coffee
+
+Now server index.html as webroot and you can play.

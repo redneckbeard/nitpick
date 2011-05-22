@@ -1,0 +1,131 @@
+.colorpicker {
+    width: 320px;
+    height: 175px;
+    overflow:hidden;
+	position: absolute;
+	font-family: Arial, Helvetica, sans-serif;
+    border:black 1px solid;
+    border-radius:4px;
+    /*
+	 *display: none;
+     */
+}
+
+.colorpicker_nav {
+	position: absolute;
+	top: 3px;
+	right: 5px;
+}
+
+.colorpicker_nav a {
+    text-decoration:none;
+}
+
+.colorpicker_nav a.colorpicker_cancel {
+    color:#bb0000;
+}
+
+.colorpicker_nav a.colorpicker_accept {
+    color:#008800;
+}
+
+.colorpicker_color {
+	position: absolute;
+	top: 10px;
+	left: 10px;
+	width: 150px;
+	height: 150px;
+	background: #f00;
+	overflow: hidden;
+	cursor: crosshair;
+}
+
+.colorpicker_color .alpha_channel {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	width: 150px;
+	height: 150px;
+	background: transparent url(../img/transparent.png);
+}
+
+.colorpicker_color div {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 150px;
+	height: 150px;
+	background: url(../img/colorpicker_overlay.png);
+}
+.colorpicker_color div div {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 11px;
+	height: 11px;
+	overflow: hidden;
+	background: url(../img/colorpicker_select.gif);
+	margin: -5px 0 0 -5px;
+}
+.colorpicker_hue {
+	background: url(../img/hue.png) center no-repeat;
+	position: absolute;
+	top: 10px;
+	left: 171px;
+	width: 35px;
+	height: 150px;
+	cursor: n-resize;
+}
+.colorpicker_hue div {
+	position: absolute;
+	width: 35px;
+	height: 9px;
+	overflow: hidden;
+	background: url(../img/colorpicker_indic.gif) left top;
+	margin: -4px 0 0 0;
+	left: 0px;
+}
+.colorpicker_fields {
+	position: absolute;
+    left:215px;
+    top:10px;
+}
+.colorpicker input {
+	background-color: transparent;
+	border: 1px solid black;
+	font-size: 11px;
+	font-family: Arial, Helvetica, sans-serif;
+	text-align: right;
+	margin: 0;
+	padding: 0;
+	height: 15px;
+}
+
+.rgb_row input, .hex_row input {
+    width:30px;
+}
+
+.colorpicker_fields label {
+    font-size:12px;
+}
+
+.rgb_row, .hex_row {
+    margin-bottom:5px;
+}
+
+.rgb_row div {
+    margin-right:4px;
+}
+
+div.button_wrap {
+    float:right;
+}
+
+div.button_wrap a {
+    font-size:12px;
+    border:2px solid black;
+    background:url(../img/disable.png) center;
+    display:block;
+    height:15px;
+    width:15px;
+}
