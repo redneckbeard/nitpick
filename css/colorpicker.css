@@ -6,6 +6,7 @@
 	font-family: Arial, Helvetica, sans-serif;
     border:black 1px solid;
     border-radius:4px;
+    background-color:#444;
     /*
 	 *display: none;
      */
@@ -19,6 +20,19 @@
 
 .colorpicker_nav a {
     text-decoration:none;
+    background-color:#dedede;
+    width:14px;
+    height:14px;
+    display:block;
+    float:right;
+    margin-left:4px;
+    text-align:center;
+    border-radius:2px;
+    font-size:12px;
+}
+
+.colorpicker_nav a:hover {
+    background-color:#fff;
 }
 
 .colorpicker_nav a.colorpicker_cancel {
@@ -88,44 +102,58 @@
 .colorpicker_fields {
 	position: absolute;
     left:215px;
-    top:10px;
+    top:22px;
 }
 .colorpicker input {
-	background-color: transparent;
-	border: 1px solid black;
-	font-size: 11px;
+	font-size: 13px;
 	font-family: Arial, Helvetica, sans-serif;
-	text-align: right;
+	text-align: center;
 	margin: 0;
 	padding: 0;
-	height: 15px;
-}
-
-.rgb_row input, .hex_row input {
-    width:30px;
+	height: 22px;
+    width:40px;
+    background-color:#222;
+    border:1px solid #ccc;
+    color:#ccc;
 }
 
 .colorpicker_fields label {
-    font-size:12px;
+    font-size:13px;
+    color:#ccc;
+    width:15px;
+    padding-top:3px;
 }
 
 .rgb_row, .hex_row {
     margin-bottom:5px;
 }
 
-.rgb_row div {
-    margin-right:4px;
+.rgb_row div, .hex_row div {
+    margin:3px 4px 6px 0;
+    clear:left;
+    height:22px;
+}
+
+.rgb_row div *, .hex_row div * {
+    display:block;
+    float:left;
+}
+
+.hex_row {
+    width:95px;
 }
 
 div.button_wrap {
     float:right;
+    margin:0;
+    padding:0;
 }
 
 div.button_wrap a {
     font-size:12px;
-    border:2px solid black;
+    border:1px solid black;
     background:url(../img/disable.png) center;
     display:block;
-    height:15px;
-    width:15px;
+    height:20px;
+    width:20px;
 }
