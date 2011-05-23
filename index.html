@@ -5,11 +5,28 @@
     <script src="/js/lib/backbone.js" type="text/javascript"></script>
     <script src="/js/nitpick.js" type="text/javascript"></script>
     <link href="/css/colorpicker.css" rel="stylesheet" />
+    <style>
+        #button {
+            background-color:white;
+            border:1px solid black;
+            padding: 4px 6px;
+        }
+    </style>
 </head>
 <body>
+<a id="button" href="#">Click me</a>
+<p></p>
 <script type="text/javascript">
 $(function () {
-    $("body").prepend(new ColorPicker().render().el);
+    var MyColorPicker = ColorPicker.extend({
+        onChange: function (rgb, hex, alpha) {
+            $("body").css("background-color", "#" + hex); 
+        },
+        onAccept: function (rgb, hex, alpha) {
+            $("p").text("The currently selected color is #" + hex);
+        }
+    });
+    $("body").prepend(new MyColorPicker({button: $("a"), r: 255, g: 0, b: 0, a: 100}));
 });
 </script>
 </body>

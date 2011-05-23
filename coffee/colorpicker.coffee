@@ -8,12 +8,67 @@ class this.ColorPicker extends Backbone.View
         "change input": "change"
         "keyup div.colorpicker_rgb_a input": "changeAlpha"
         "click div.button_wrap a": "clearOpacity"
+        "click a.colorpicker_cancel": "cancel"
+        "click a.colorpicker_accept": "accept"
 
-    hsb: {h: 0, s: 0, b: 0}
+    onChange: ->
+
+    onCancel: ->
+
+    onAccept: ->
+
+    initialize: ->
+        {r, g, b, a, button} = @options
+        @hsb = ColorMath.rgbToHSB {r, g, b}
+        @original_hsb = _.clone @hsb
+        @original_alpha = a
+        $(button).click(@open)
+        @render()
+        @$("div.colorpicker_rgb_a input").val(a).trigger("keyup")
+        $("body").append @el
+        @close()
+
+    open: (e) =>
+        if e
+            e.preventDefault()
+        target = e.target
+        pos = $(target).offset()
+        m = document.compatMode is 'CSS1Compat'
+        viewPort =
+            l: window.pageXOffset or (if m then document.documentElement.scrollLeft else document.body.scrollLeft)
+            t: window.pageYOffset or (if m then document.documentElement.scrollTop else document.body.scrollTop)
+            w: window.innerWidth or (if m then document.documentElement.clientWidth else document.body.clientWidth)
+            h: window.innerHeight or (if m then document.documentElement.clientHeight else document.body.clientHeight)
+        top = pos.top + target.offsetHeight
+        left = pos.left
+        if top + 175 > viewPort.t + viewPort.h
+            top -= target.offsetHeight + 175
+        if left + 320 > viewPort.l + viewPort.w
+            left -= 320
+        $(@el).css {left: left + 'px', top: top + 'px'}
+        $(@el).show()
+    
+    close: =>
+        $(@el).hide()
+
+    cancel: =>
+        @hsb = @original_hsb
+        @$("div.colorpicker_rgb_a input").val(@original_alpha).trigger("keyup")
+        @change()
+        @close()
+
+    accept: =>
+        @original_hsb = @hsb 
+        @original_alpha = @$("div.colorpicker_rgb_a input").val()
+        @close()
+        @onAccept.call @, @getRGB, ColorMath.hsbToHex @hsb, @$("div.colorpicker_rgb_a input").val()
 
     render: =>
         _template = _.template template
-        $(@el).html (_template {r: 255, g: 255, b: 255, a: 100, hex: 'ffffff', disabled: false })
+        context = ColorMath.hsbToRGB @hsb
+        context.hex = ColorMath.hsbToHex @hsb
+        $(@el).html (_template context)
+        @change()
         @
 
     # Conversion methods to and from base-10 RGB, hex RGB, and HSB.
@@ -52,17 +107,19 @@ class this.ColorPicker extends Backbone.View
         @$('div.colorpicker_hex input').val(ColorMath.hsbToHex @hsb)
 
     change: (e) =>
-        target = $ e.target
-        targetClass = target.attr 'class' 
-        if targetClass == 'hex'
-            @hsb = ColorMath.hexToHSB target.val()
-        else if targetClass == "rgb"
-            @hsb = ColorMath.rgbToHSB @getRGB()
+        if e
+            target = $ e.target
+            targetClass = target.attr 'class' 
+            if targetClass is 'hex'
+                @hsb = ColorMath.hexToHSB target.val()
+            else if targetClass is "rgb"
+                @hsb = ColorMath.rgbToHSB @getRGB()
         @setRGB()
         @setHex()
         @setPalette()
         @setHue()
-        # callback
+        if e
+            @onChange.call @, @getRGB, ColorMath.hsbToHex @hsb, @$("div.colorpicker_rgb_a input").val()
 
     downHue: (e) =>
         e.preventDefault()
@@ -108,9 +165,9 @@ class this.ColorPicker extends Backbone.View
         key_code = e.keyCode
         if key_code in [38, 40]
             adjusted = true
-            if key_code == 38
+            if key_code is 38
                 alpha += 1
-            else if key_code == 40
+            else if key_code is 40
                 alpha -= 1
         if alpha > 100
             alpha = 100

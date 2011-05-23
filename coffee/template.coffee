@@ -31,7 +31,7 @@ template = """
         </div>
         <div class="colorpicker_rgb_a">
         <label>A</label>
-        <input class="rgb" type="text" maxlength="3" size="3" value="<%= a %>"><label>%</label>
+        <input class="rgb" type="text" maxlength="3" size="3" value=""><label>%</label>
         </div>
     </div>
 

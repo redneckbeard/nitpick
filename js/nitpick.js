@@ -11,7 +11,7 @@
   ColorMath = (function() {
     function ColorMath() {}
     ColorMath.hexToRGB = function(hex) {
-      hex = parseInt((hex.indexOf('#' > -1) ? hex.substring(1) : hex), 16);
+      hex = parseInt(((hex.indexOf('#')) > -1 ? hex.substring(1) : hex), 16);
       return {
         r: hex >> 16,
         g: (hex & 0x00FF00) >> 8,
@@ -19,6 +19,7 @@
       };
     };
     ColorMath.hexToHSB = function(hex) {
+      console.log(this.hexToRGB(hex));
       return this.rgbToHSB(this.hexToRGB(hex));
     };
     ColorMath.rgbToHSB = function(rgb) {
@@ -118,7 +119,7 @@
     };
     return ColorMath;
   })();
-  template = "<div class=\"colorpicker_nav\">\n    <a class=\"colorpicker_accept\" href=\"#\">&#x2714;</a>\n    <a class=\"colorpicker_cancel\" href=\"#\">&#x2718;</a>\n</div>\n<div class=\"colorpicker_color\" style=\"background-color: rgb(255, 0, 0); \">\n    <div>\n        <div></div>\n    </div>\n    <div class=\"alpha_channel\"></div>\n</div>\n\n<div class=\"colorpicker_hue\">\n    <div style=\"top: 150px; \">\n    </div>\n</div>\n\n<div class=\"colorpicker_fields\">\n    <div class=\"rgb_row\">\n        <div class=\"colorpicker_rgb_r\">\n        <label>R</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= r %>\">\n        </div>\n        <div class=\"colorpicker_rgb_g\">\n        <label>G</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= g %>\">\n        </div>\n        <div class=\"colorpicker_rgb_b\">\n        <label>B</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= b %>\">\n        </div>\n        <div class=\"colorpicker_rgb_a\">\n        <label>A</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= a %>\"><label>%</label>\n        </div>\n    </div>\n\n    <div class=\"hex_row\">\n        <div class=\"button_wrap\">\n        <a href=\"#\"></a>\n        </div>\n        <div>\n            <label>#</label>\n            <input class=\"hex\" type=\"text\" maxlength=\"6\" size=\"6\" value=\"<%= hex %>\">\n        </div>\n    </div>\n\n    </div>\n</div>";
+  template = "<div class=\"colorpicker_nav\">\n    <a class=\"colorpicker_accept\" href=\"#\">&#x2714;</a>\n    <a class=\"colorpicker_cancel\" href=\"#\">&#x2718;</a>\n</div>\n<div class=\"colorpicker_color\" style=\"background-color: rgb(255, 0, 0); \">\n    <div>\n        <div></div>\n    </div>\n    <div class=\"alpha_channel\"></div>\n</div>\n\n<div class=\"colorpicker_hue\">\n    <div style=\"top: 150px; \">\n    </div>\n</div>\n\n<div class=\"colorpicker_fields\">\n    <div class=\"rgb_row\">\n        <div class=\"colorpicker_rgb_r\">\n        <label>R</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= r %>\">\n        </div>\n        <div class=\"colorpicker_rgb_g\">\n        <label>G</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= g %>\">\n        </div>\n        <div class=\"colorpicker_rgb_b\">\n        <label>B</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= b %>\">\n        </div>\n        <div class=\"colorpicker_rgb_a\">\n        <label>A</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"\"><label>%</label>\n        </div>\n    </div>\n\n    <div class=\"hex_row\">\n        <div class=\"button_wrap\">\n        <a href=\"#\"></a>\n        </div>\n        <div>\n            <label>#</label>\n            <input class=\"hex\" type=\"text\" maxlength=\"6\" size=\"6\" value=\"<%= hex %>\">\n        </div>\n    </div>\n\n    </div>\n</div>";
   this.ColorPicker = (function() {
     __extends(ColorPicker, Backbone.View);
     function ColorPicker() {
@@ -137,6 +138,10 @@
       this.setHue = __bind(this.setHue, this);
       this.setPalette = __bind(this.setPalette, this);
       this.render = __bind(this.render, this);
+      this.accept = __bind(this.accept, this);
+      this.cancel = __bind(this.cancel, this);
+      this.close = __bind(this.close, this);
+      this.open = __bind(this.open, this);
       ColorPicker.__super__.constructor.apply(this, arguments);
     }
     ColorPicker.prototype.tagName = "div";
@@ -146,24 +151,79 @@
       "mousedown div.colorpicker_color": "downSelector",
       "change input": "change",
       "keyup div.colorpicker_rgb_a input": "changeAlpha",
-      "click div.button_wrap a": "clearOpacity"
+      "click div.button_wrap a": "clearOpacity",
+      "click a.colorpicker_cancel": "cancel",
+      "click a.colorpicker_accept": "accept"
     };
-    ColorPicker.prototype.hsb = {
-      h: 0,
-      s: 0,
-      b: 0
+    ColorPicker.prototype.onChange = function() {};
+    ColorPicker.prototype.onCancel = function() {};
+    ColorPicker.prototype.onAccept = function() {};
+    ColorPicker.prototype.initialize = function() {
+      var a, b, button, g, r, _ref;
+      _ref = this.options, r = _ref.r, g = _ref.g, b = _ref.b, a = _ref.a, button = _ref.button;
+      this.hsb = ColorMath.rgbToHSB({
+        r: r,
+        g: g,
+        b: b
+      });
+      this.original_hsb = _.clone(this.hsb);
+      this.original_alpha = a;
+      $(button).click(this.open);
+      this.render();
+      this.$("div.colorpicker_rgb_a input").val(a).trigger("keyup");
+      $("body").append(this.el);
+      return this.close();
+    };
+    ColorPicker.prototype.open = function(e) {
+      var left, m, pos, target, top, viewPort;
+      if (e) {
+        e.preventDefault();
+      }
+      target = e.target;
+      pos = $(target).offset();
+      m = document.compatMode === 'CSS1Compat';
+      viewPort = {
+        l: window.pageXOffset || (m ? document.documentElement.scrollLeft : document.body.scrollLeft),
+        t: window.pageYOffset || (m ? document.documentElement.scrollTop : document.body.scrollTop),
+        w: window.innerWidth || (m ? document.documentElement.clientWidth : document.body.clientWidth),
+        h: window.innerHeight || (m ? document.documentElement.clientHeight : document.body.clientHeight)
+      };
+      top = pos.top + target.offsetHeight;
+      left = pos.left;
+      if (top + 175 > viewPort.t + viewPort.h) {
+        top -= target.offsetHeight + 175;
+      }
+      if (left + 320 > viewPort.l + viewPort.w) {
+        left -= 320;
+      }
+      $(this.el).css({
+        left: left + 'px',
+        top: top + 'px'
+      });
+      return $(this.el).show();
+    };
+    ColorPicker.prototype.close = function() {
+      return $(this.el).hide();
+    };
+    ColorPicker.prototype.cancel = function() {
+      this.hsb = this.original_hsb;
+      this.$("div.colorpicker_rgb_a input").val(this.original_alpha).trigger("keyup");
+      this.change();
+      return this.close();
+    };
+    ColorPicker.prototype.accept = function() {
+      this.original_hsb = this.hsb;
+      this.original_alpha = this.$("div.colorpicker_rgb_a input").val();
+      this.close();
+      return this.onAccept.call(this, this.getRGB, ColorMath.hsbToHex(this.hsb, this.$("div.colorpicker_rgb_a input").val()));
     };
     ColorPicker.prototype.render = function() {
-      var _template;
+      var context, _template;
       _template = _.template(template);
-      $(this.el).html(_template({
-        r: 255,
-        g: 255,
-        b: 255,
-        a: 100,
-        hex: 'ffffff',
-        disabled: false
-      }));
+      context = ColorMath.hsbToRGB(this.hsb);
+      context.hex = ColorMath.hsbToHex(this.hsb);
+      $(this.el).html(_template(context));
+      this.change();
       return this;
     };
     ColorPicker.prototype.setPalette = function() {
@@ -203,17 +263,22 @@
     };
     ColorPicker.prototype.change = function(e) {
       var target, targetClass;
-      target = $(e.target);
-      targetClass = target.attr('class');
-      if (targetClass === 'hex') {
-        this.hsb = ColorMath.hexToHSB(target.val());
-      } else if (targetClass === "rgb") {
-        this.hsb = ColorMath.rgbToHSB(this.getRGB());
+      if (e) {
+        target = $(e.target);
+        targetClass = target.attr('class');
+        if (targetClass === 'hex') {
+          this.hsb = ColorMath.hexToHSB(target.val());
+        } else if (targetClass === "rgb") {
+          this.hsb = ColorMath.rgbToHSB(this.getRGB());
+        }
       }
       this.setRGB();
       this.setHex();
       this.setPalette();
-      return this.setHue();
+      this.setHue();
+      if (e) {
+        return this.onChange.call(this, this.getRGB, ColorMath.hsbToHex(this.hsb, this.$("div.colorpicker_rgb_a input").val()));
+      }
     };
     ColorPicker.prototype.downHue = function(e) {
       var current;

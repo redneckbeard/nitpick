@@ -1,6 +1,6 @@
 class ColorMath
     @hexToRGB = (hex) ->
-        hex = parseInt (if hex.indexOf '#' > -1 then hex.substring 1 else hex), 16
+        hex = parseInt (if (hex.indexOf '#') > -1 then hex.substring 1 else hex), 16
         {
             r: hex >> 16
             g: (hex & 0x00FF00) >> 8
@@ -8,6 +8,7 @@ class ColorMath
         }
     
     @hexToHSB = (hex) ->
+        console.log(@hexToRGB hex)
         return @rgbToHSB(@hexToRGB hex)
     
     @rgbToHSB = (rgb) ->
