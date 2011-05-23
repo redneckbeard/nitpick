@@ -1,4 +1,4 @@
-class this.ColorMath
+class ColorMath
     @hexToRGB = (hex) ->
         hex = parseInt (if hex.indexOf '#' > -1 then hex.substring 1 else hex), 16
         {

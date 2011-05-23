@@ -1,4 +1,4 @@
-this.template = """
+template = """
 <div class="colorpicker_nav">
     <a class="colorpicker_accept" href="#">&#x2714;</a>
     <a class="colorpicker_cancel" href="#">&#x2718;</a>
