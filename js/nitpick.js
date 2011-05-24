@@ -259,7 +259,7 @@
       return this.$('div.rgb_row input').eq(0).val(rgb.r).end().eq(1).val(rgb.g).end().eq(2).val(rgb.b).end();
     };
     ColorPicker.prototype.setHex = function() {
-      return this.$('div.colorpicker_hex input').val(ColorMath.hsbToHex(this.hsb));
+      return this.$('input.hex').val(ColorMath.hsbToHex(this.hsb));
     };
     ColorPicker.prototype.change = function(e) {
       var target, targetClass;

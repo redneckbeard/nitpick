@@ -117,6 +117,10 @@
     color:#ccc;
 }
 
+.colorpicker input.hex {
+	font-size: 11px;
+}
+
 .colorpicker_fields label {
     font-size:13px;
     color:#ccc;

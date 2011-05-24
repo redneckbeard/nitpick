@@ -104,7 +104,7 @@ class this.ColorPicker extends Backbone.View
             .eq(2).val(rgb.b).end()
 
     setHex: =>
-        @$('div.colorpicker_hex input').val(ColorMath.hsbToHex @hsb)
+        @$('input.hex').val(ColorMath.hsbToHex @hsb)
 
     change: (e) =>
         if e
