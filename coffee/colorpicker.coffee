@@ -61,7 +61,7 @@ class this.ColorPicker extends Backbone.View
         @original_hsb = _.clone @hsb 
         @original_alpha = @$("div.colorpicker_rgb_a input").val()
         @close()
-        @onAccept.call @, @getRGB, ColorMath.hsbToHex @hsb, @$("div.colorpicker_rgb_a input").val()
+        @onAccept.call @, @getRGB(), ColorMath.hsbToHex @hsb, @$("div.colorpicker_rgb_a input").val()
 
     render: =>
         _template = _.template template
@@ -119,7 +119,7 @@ class this.ColorPicker extends Backbone.View
         @setPalette()
         @setHue()
         if e
-            @onChange.call @, @getRGB, ColorMath.hsbToHex @hsb, @$("div.colorpicker_rgb_a input").val()
+            @onChange.call @, @getRGB(), ColorMath.hsbToHex @hsb, @$("div.colorpicker_rgb_a input").val()
 
     downHue: (e) =>
         e.preventDefault()

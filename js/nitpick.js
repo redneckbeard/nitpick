@@ -215,7 +215,7 @@
       this.original_hsb = _.clone(this.hsb);
       this.original_alpha = this.$("div.colorpicker_rgb_a input").val();
       this.close();
-      return this.onAccept.call(this, this.getRGB, ColorMath.hsbToHex(this.hsb, this.$("div.colorpicker_rgb_a input").val()));
+      return this.onAccept.call(this, this.getRGB(), ColorMath.hsbToHex(this.hsb, this.$("div.colorpicker_rgb_a input").val()));
     };
     ColorPicker.prototype.render = function() {
       var context, _template;
@@ -277,7 +277,7 @@
       this.setPalette();
       this.setHue();
       if (e) {
-        return this.onChange.call(this, this.getRGB, ColorMath.hsbToHex(this.hsb, this.$("div.colorpicker_rgb_a input").val()));
+        return this.onChange.call(this, this.getRGB(), ColorMath.hsbToHex(this.hsb, this.$("div.colorpicker_rgb_a input").val()));
       }
     };
     ColorPicker.prototype.downHue = function(e) {
