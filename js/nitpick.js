@@ -205,14 +205,14 @@
     ColorPicker.prototype.close = function() {
       return $(this.el).hide();
     };
-    ColorPicker.prototype.cancel = function() {
-      this.hsb = this.original_hsb;
+    ColorPicker.prototype.cancel = function(e) {
+      this.hsb = _.clone(this.original_hsb);
       this.$("div.colorpicker_rgb_a input").val(this.original_alpha).trigger("keyup");
-      this.change();
+      this.change(e);
       return this.close();
     };
     ColorPicker.prototype.accept = function() {
-      this.original_hsb = this.hsb;
+      this.original_hsb = _.clone(this.hsb);
       this.original_alpha = this.$("div.colorpicker_rgb_a input").val();
       this.close();
       return this.onAccept.call(this, this.getRGB, ColorMath.hsbToHex(this.hsb, this.$("div.colorpicker_rgb_a input").val()));

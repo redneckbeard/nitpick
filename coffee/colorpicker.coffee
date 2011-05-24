@@ -51,14 +51,14 @@ class this.ColorPicker extends Backbone.View
     close: =>
         $(@el).hide()
 
-    cancel: =>
-        @hsb = @original_hsb
+    cancel: (e) =>
+        @hsb = _.clone @original_hsb
         @$("div.colorpicker_rgb_a input").val(@original_alpha).trigger("keyup")
-        @change()
+        @change e
         @close()
 
     accept: =>
-        @original_hsb = @hsb 
+        @original_hsb = _.clone @hsb 
         @original_alpha = @$("div.colorpicker_rgb_a input").val()
         @close()
         @onAccept.call @, @getRGB, ColorMath.hsbToHex @hsb, @$("div.colorpicker_rgb_a input").val()
