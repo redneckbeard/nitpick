@@ -1,3 +1,7 @@
+
+class Proxy extends Backbone.Events
+
+
 class this.ColorPicker extends Backbone.View
     tagName: "div"
     className: "colorpicker"
@@ -27,6 +31,9 @@ class this.ColorPicker extends Backbone.View
         @$("div.colorpicker_rgb_a input").val(a).trigger("keyup")
         $("body").append @el
         @close()
+        Proxy.bind "open", (sender) =>
+            if @open and sender isnt @
+                @cancel true
 
     open: (e) =>
         if e
@@ -47,9 +54,12 @@ class this.ColorPicker extends Backbone.View
             left -= 320
         $(@el).css {left: left + 'px', top: top + 'px'}
         $(@el).show()
+        Proxy.trigger "open", @
+        @open = true
     
     close: =>
         $(@el).hide()
+        @open = false
 
     cancel: (e) =>
         @hsb = _.clone @original_hsb

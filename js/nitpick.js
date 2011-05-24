@@ -1,13 +1,13 @@
 (function() {
-  var ColorMath, template;
-  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
+  var ColorMath, Proxy, template;
+  var __hasProp = Object.prototype.hasOwnProperty, __extends = function(child, parent) {
     for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; }
     function ctor() { this.constructor = child; }
     ctor.prototype = parent.prototype;
     child.prototype = new ctor;
     child.__super__ = parent.prototype;
     return child;
-  };
+  }, __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; };
   ColorMath = (function() {
     function ColorMath() {}
     ColorMath.hexToRGB = function(hex) {
@@ -120,6 +120,13 @@
     return ColorMath;
   })();
   template = "<div class=\"colorpicker_nav\">\n    <a class=\"colorpicker_accept\" href=\"#\">&#x2714;</a>\n    <a class=\"colorpicker_cancel\" href=\"#\">&#x2718;</a>\n</div>\n<div class=\"colorpicker_color\" style=\"background-color: rgb(255, 0, 0); \">\n    <div>\n        <div></div>\n    </div>\n    <div class=\"alpha_channel\"></div>\n</div>\n\n<div class=\"colorpicker_hue\">\n    <div style=\"top: 150px; \">\n    </div>\n</div>\n\n<div class=\"colorpicker_fields\">\n    <div class=\"rgb_row\">\n        <div class=\"colorpicker_rgb_r\">\n        <label>R</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= r %>\">\n        </div>\n        <div class=\"colorpicker_rgb_g\">\n        <label>G</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= g %>\">\n        </div>\n        <div class=\"colorpicker_rgb_b\">\n        <label>B</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= b %>\">\n        </div>\n        <div class=\"colorpicker_rgb_a\">\n        <label>A</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"\"><label>%</label>\n        </div>\n    </div>\n\n    <div class=\"hex_row\">\n        <div class=\"button_wrap\">\n        <a href=\"#\"></a>\n        </div>\n        <div>\n            <label>#</label>\n            <input class=\"hex\" type=\"text\" maxlength=\"6\" size=\"6\" value=\"<%= hex %>\">\n        </div>\n    </div>\n\n    </div>\n</div>";
+  Proxy = (function() {
+    __extends(Proxy, Backbone.Events);
+    function Proxy() {
+      Proxy.__super__.constructor.apply(this, arguments);
+    }
+    return Proxy;
+  })();
   this.ColorPicker = (function() {
     __extends(ColorPicker, Backbone.View);
     function ColorPicker() {
@@ -172,7 +179,12 @@
       this.render();
       this.$("div.colorpicker_rgb_a input").val(a).trigger("keyup");
       $("body").append(this.el);
-      return this.close();
+      this.close();
+      return Proxy.bind("open", __bind(function(sender) {
+        if (this.open && sender !== this) {
+          return this.cancel(true);
+        }
+      }, this));
     };
     ColorPicker.prototype.open = function(e) {
       var left, m, pos, target, top, viewPort;
@@ -200,10 +212,13 @@
         left: left + 'px',
         top: top + 'px'
       });
-      return $(this.el).show();
+      $(this.el).show();
+      Proxy.trigger("open", this);
+      return this.open = true;
     };
     ColorPicker.prototype.close = function() {
-      return $(this.el).hide();
+      $(this.el).hide();
+      return this.open = false;
     };
     ColorPicker.prototype.cancel = function(e) {
       this.hsb = _.clone(this.original_hsb);
