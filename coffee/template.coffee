@@ -19,19 +19,19 @@ template = """
     <div class="rgb_row">
         <div class="colorpicker_rgb_r">
         <label>R</label>
-        <input class="rgb" type="text" maxlength="3" size="3" value="<%= r %>">
+        <input class="rgb" type="text" maxlength="3" size="3" value="<%= r %>" />
         </div>
         <div class="colorpicker_rgb_g">
         <label>G</label>
-        <input class="rgb" type="text" maxlength="3" size="3" value="<%= g %>">
+        <input class="rgb" type="text" maxlength="3" size="3" value="<%= g %>" />
         </div>
         <div class="colorpicker_rgb_b">
         <label>B</label>
-        <input class="rgb" type="text" maxlength="3" size="3" value="<%= b %>">
+        <input class="rgb" type="text" maxlength="3" size="3" value="<%= b %>" />
         </div>
         <div class="colorpicker_rgb_a">
         <label>A</label>
-        <input class="rgb" type="text" maxlength="3" size="3" value=""><label>%</label>
+        <input class="rgb" type="text" maxlength="3" size="3" value="<%= a %>" /><label>%</label>
         </div>
     </div>
 

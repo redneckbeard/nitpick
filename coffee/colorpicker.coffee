@@ -25,7 +25,7 @@ class this.ColorPicker extends Backbone.View
         {r, g, b, a, button} = @options
         @hsb = ColorMath.rgbToHSB {r, g, b}
         @original_hsb = _.clone @hsb
-        @original_alpha = a
+        @original_alpha = @alpha = a
         $(button).click(@open)
         @render()
         @$("div.colorpicker_rgb_a input").val(a).trigger("keyup")
@@ -64,6 +64,7 @@ class this.ColorPicker extends Backbone.View
     cancel: (e) =>
         @hsb = _.clone @original_hsb
         @$("div.colorpicker_rgb_a input").val(@original_alpha).trigger("keyup")
+        @alpha = @original_alpha
         @change e
         @close()
 
@@ -71,12 +72,13 @@ class this.ColorPicker extends Backbone.View
         @original_hsb = _.clone @hsb 
         @original_alpha = @$("div.colorpicker_rgb_a input").val()
         @close()
-        @onAccept.call @, @getRGB(), ColorMath.hsbToHex @hsb, @$("div.colorpicker_rgb_a input").val()
+        @onAccept.call @, @getRGB(), (ColorMath.hsbToHex @hsb), @alpha
 
     render: =>
         _template = _.template template
         context = ColorMath.hsbToRGB @hsb
         context.hex = ColorMath.hsbToHex @hsb
+        context.a = @original_alpha
         $(@el).html (_template context)
         @change()
         @
@@ -129,7 +131,7 @@ class this.ColorPicker extends Backbone.View
         @setPalette()
         @setHue()
         if e
-            @onChange.call @, @getRGB(), ColorMath.hsbToHex @hsb, @$("div.colorpicker_rgb_a input").val()
+            @onChange.call @, @getRGB(), (ColorMath.hsbToHex @hsb), @alpha
 
     downHue: (e) =>
         e.preventDefault()
@@ -184,8 +186,10 @@ class this.ColorPicker extends Backbone.View
         else if alpha < 0
             alpha = 0
         if adjusted?
-            $(e.target).val alpha 
+            $(e.target).val alpha
+        @alpha = alpha
         @$("div.alpha_channel").fadeTo 0, (100 - alpha) / 100
+        @change e
 
     clearOpacity: (e) =>
         e.preventDefault() 
