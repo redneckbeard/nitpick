@@ -119,7 +119,7 @@
     };
     return ColorMath;
   })();
-  template = "<div class=\"colorpicker_nav\">\n    <a class=\"colorpicker_accept\" href=\"#\">&#x2714;</a>\n    <a class=\"colorpicker_cancel\" href=\"#\">&#x2718;</a>\n</div>\n<div class=\"colorpicker_color\" style=\"background-color: rgb(255, 0, 0); \">\n    <div>\n        <div></div>\n    </div>\n    <div class=\"alpha_channel\"></div>\n</div>\n\n<div class=\"colorpicker_hue\">\n    <div style=\"top: 150px; \">\n    </div>\n</div>\n\n<div class=\"colorpicker_fields\">\n    <div class=\"rgb_row\">\n        <div class=\"colorpicker_rgb_r\">\n        <label>R</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= r %>\">\n        </div>\n        <div class=\"colorpicker_rgb_g\">\n        <label>G</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= g %>\">\n        </div>\n        <div class=\"colorpicker_rgb_b\">\n        <label>B</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= b %>\">\n        </div>\n        <div class=\"colorpicker_rgb_a\">\n        <label>A</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"\"><label>%</label>\n        </div>\n    </div>\n\n    <div class=\"hex_row\">\n        <div class=\"button_wrap\">\n        <a href=\"#\"></a>\n        </div>\n        <div>\n            <label>#</label>\n            <input class=\"hex\" type=\"text\" maxlength=\"6\" size=\"6\" value=\"<%= hex %>\">\n        </div>\n    </div>\n\n    </div>\n</div>";
+  template = "<div class=\"colorpicker_nav\">\n    <a class=\"colorpicker_accept\" href=\"#\">&#x2714;</a>\n    <a class=\"colorpicker_cancel\" href=\"#\">&#x2718;</a>\n</div>\n<div class=\"colorpicker_color\" style=\"background-color: rgb(255, 0, 0); \">\n    <div>\n        <div></div>\n    </div>\n    <div class=\"alpha_channel\"></div>\n</div>\n\n<div class=\"colorpicker_hue\">\n    <div style=\"top: 150px; \">\n    </div>\n</div>\n\n<div class=\"colorpicker_fields\">\n    <div class=\"rgb_row\">\n        <div class=\"colorpicker_rgb_r\">\n        <label>R</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= r %>\" />\n        </div>\n        <div class=\"colorpicker_rgb_g\">\n        <label>G</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= g %>\" />\n        </div>\n        <div class=\"colorpicker_rgb_b\">\n        <label>B</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= b %>\" />\n        </div>\n        <div class=\"colorpicker_rgb_a\">\n        <label>A</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= a %>\" /><label>%</label>\n        </div>\n    </div>\n\n    <div class=\"hex_row\">\n        <div class=\"button_wrap\">\n        <a href=\"#\"></a>\n        </div>\n        <div>\n            <label>#</label>\n            <input class=\"hex\" type=\"text\" maxlength=\"6\" size=\"6\" value=\"<%= hex %>\">\n        </div>\n    </div>\n\n    </div>\n</div>";
   Proxy = (function() {
     __extends(Proxy, Backbone.Events);
     function Proxy() {
@@ -174,7 +174,7 @@
         b: b
       });
       this.original_hsb = _.clone(this.hsb);
-      this.original_alpha = a;
+      this.original_alpha = this.alpha = a;
       $(button).click(this.open);
       this.render();
       this.$("div.colorpicker_rgb_a input").val(a).trigger("keyup");
@@ -223,6 +223,7 @@
     ColorPicker.prototype.cancel = function(e) {
       this.hsb = _.clone(this.original_hsb);
       this.$("div.colorpicker_rgb_a input").val(this.original_alpha).trigger("keyup");
+      this.alpha = this.original_alpha;
       this.change(e);
       return this.close();
     };
@@ -230,13 +231,14 @@
       this.original_hsb = _.clone(this.hsb);
       this.original_alpha = this.$("div.colorpicker_rgb_a input").val();
       this.close();
-      return this.onAccept.call(this, this.getRGB(), ColorMath.hsbToHex(this.hsb, this.$("div.colorpicker_rgb_a input").val()));
+      return this.onAccept.call(this, this.getRGB(), ColorMath.hsbToHex(this.hsb), this.alpha);
     };
     ColorPicker.prototype.render = function() {
       var context, _template;
       _template = _.template(template);
       context = ColorMath.hsbToRGB(this.hsb);
       context.hex = ColorMath.hsbToHex(this.hsb);
+      context.a = this.original_alpha;
       $(this.el).html(_template(context));
       this.change();
       return this;
@@ -292,7 +294,7 @@
       this.setPalette();
       this.setHue();
       if (e) {
-        return this.onChange.call(this, this.getRGB(), ColorMath.hsbToHex(this.hsb, this.$("div.colorpicker_rgb_a input").val()));
+        return this.onChange.call(this, this.getRGB(), ColorMath.hsbToHex(this.hsb), this.alpha);
       }
     };
     ColorPicker.prototype.downHue = function(e) {
@@ -358,7 +360,9 @@
       if (adjusted != null) {
         $(e.target).val(alpha);
       }
-      return this.$("div.alpha_channel").fadeTo(0, (100 - alpha) / 100);
+      this.alpha = alpha;
+      this.$("div.alpha_channel").fadeTo(0, (100 - alpha) / 100);
+      return this.change(e);
     };
     ColorPicker.prototype.clearOpacity = function(e) {
       e.preventDefault();
