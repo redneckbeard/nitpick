@@ -63,9 +63,11 @@ class this.ColorPicker extends Backbone.View
         @open = false
 
     cancel: (e) =>
-        @hsb = _.clone @original_hsb
+        hsb = @hsb
+        hsb = _.extend {}, @original_hsb
         @$("div.colorpicker_rgb_a input").val(@original_alpha).trigger("keyup")
         @alpha = @original_alpha
+        @hsb = hsb
         @change e
         @close()
 

@@ -223,9 +223,13 @@
       return this.open = false;
     };
     ColorPicker.prototype.cancel = function(e) {
-      this.hsb = _.clone(this.original_hsb);
+      var hsb;
+      hsb = this.hsb;
+      hsb = _.extend({}, this.original_hsb);
       this.$("div.colorpicker_rgb_a input").val(this.original_alpha).trigger("keyup");
       this.alpha = this.original_alpha;
+      console.log(hsb, this.original_hsb);
+      this.hsb = hsb;
       this.change(e);
       return this.close();
     };
