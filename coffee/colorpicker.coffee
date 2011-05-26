@@ -56,6 +56,7 @@ class this.ColorPicker extends Backbone.View
         $(@el).show()
         Proxy.trigger "open", @
         @open = true
+        ($ document).bind "mousedown", @blur
     
     close: =>
         $(@el).hide()
@@ -73,6 +74,14 @@ class this.ColorPicker extends Backbone.View
         @original_alpha = @$("div.colorpicker_rgb_a input").val()
         @close()
         @onAccept.call @, @getRGB(), (ColorMath.hsbToHex @hsb), @alpha
+
+    blur: (e) =>
+        target = e.target
+        el = @el
+        if target isnt el and $(el).find(target).length is 0
+            ($ document).unbind "mousedown"
+            @close()
+        
 
     render: =>
         _template = _.template template

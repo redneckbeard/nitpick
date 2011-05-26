@@ -145,6 +145,7 @@
       this.setHue = __bind(this.setHue, this);
       this.setPalette = __bind(this.setPalette, this);
       this.render = __bind(this.render, this);
+      this.blur = __bind(this.blur, this);
       this.accept = __bind(this.accept, this);
       this.cancel = __bind(this.cancel, this);
       this.close = __bind(this.close, this);
@@ -214,7 +215,8 @@
       });
       $(this.el).show();
       Proxy.trigger("open", this);
-      return this.open = true;
+      this.open = true;
+      return ($(document)).bind("mousedown", this.blur);
     };
     ColorPicker.prototype.close = function() {
       $(this.el).hide();
@@ -232,6 +234,15 @@
       this.original_alpha = this.$("div.colorpicker_rgb_a input").val();
       this.close();
       return this.onAccept.call(this, this.getRGB(), ColorMath.hsbToHex(this.hsb), this.alpha);
+    };
+    ColorPicker.prototype.blur = function(e) {
+      var el, target;
+      target = e.target;
+      el = this.el;
+      if (target !== el && $(el).find(target).length === 0) {
+        ($(document)).unbind("mousedown");
+        return this.close();
+      }
     };
     ColorPicker.prototype.render = function() {
       var context, _template;
