@@ -1,4 +1,4 @@
-# Nitpick: a choosey color chooser # 
+# Nitpick: a choosey color chooser
 
 Nitpick is essentially a refactor and port to CoffeeScript of the [jQuery
 ColorPicker plugin](http://www.eyecon.ro/colorpicker/) by Stefan Petre.  We
