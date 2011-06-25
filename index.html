@@ -20,13 +20,13 @@
 <p></p>
 <script type="text/javascript">
 $(function () {
-    var MyColorPicker = ColorPicker.extend({
+    var MyNitPicker = NitPicker.extend({
         onAccept: function (rgb, hex, alpha) {
             $("p").text("The currently selected color is #" + hex);
         }
     });
     $("div.button").each(function () {
-        new MyColorPicker({button: $(this), r: 139, g: 82, b: 56, a: 100})
+        new MyNitPicker({button: $(this), r: 139, g: 82, b: 56, a: 100})
     });
 
 });

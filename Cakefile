@@ -5,7 +5,7 @@ appFiles  = [
   # omit src/ and .coffee to make the below lines a little shorter
   'colormath'
   'template'
-  'colorpicker'
+  'nitpick'
 ]
 
 task 'build', 'Build single application file from source files', ->

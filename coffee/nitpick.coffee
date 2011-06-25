@@ -2,7 +2,7 @@
 class Proxy extends Backbone.Events
 
 
-class this.ColorPicker extends Backbone.View
+class this.NitPicker extends Backbone.View
     tagName: "div"
     className: "nitpicker"
 

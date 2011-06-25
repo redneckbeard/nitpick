@@ -127,9 +127,9 @@
     }
     return Proxy;
   })();
-  this.ColorPicker = (function() {
-    __extends(ColorPicker, Backbone.View);
-    function ColorPicker() {
+  this.NitPicker = (function() {
+    __extends(NitPicker, Backbone.View);
+    function NitPicker() {
       this.clearOpacity = __bind(this.clearOpacity, this);
       this.changeAlpha = __bind(this.changeAlpha, this);
       this.upSelector = __bind(this.upSelector, this);
@@ -150,11 +150,11 @@
       this.cancel = __bind(this.cancel, this);
       this.close = __bind(this.close, this);
       this.open = __bind(this.open, this);
-      ColorPicker.__super__.constructor.apply(this, arguments);
+      NitPicker.__super__.constructor.apply(this, arguments);
     }
-    ColorPicker.prototype.tagName = "div";
-    ColorPicker.prototype.className = "nitpicker";
-    ColorPicker.prototype.events = {
+    NitPicker.prototype.tagName = "div";
+    NitPicker.prototype.className = "nitpicker";
+    NitPicker.prototype.events = {
       "mousedown div.nitpicker_hue": "downHue",
       "mousedown div.nitpicker_color": "downSelector",
       "change input": "change",
@@ -163,10 +163,10 @@
       "click a.nitpicker_cancel": "cancel",
       "click a.nitpicker_accept": "accept"
     };
-    ColorPicker.prototype.onChange = function() {};
-    ColorPicker.prototype.onCancel = function() {};
-    ColorPicker.prototype.onAccept = function() {};
-    ColorPicker.prototype.initialize = function() {
+    NitPicker.prototype.onChange = function() {};
+    NitPicker.prototype.onCancel = function() {};
+    NitPicker.prototype.onAccept = function() {};
+    NitPicker.prototype.initialize = function() {
       var a, b, button, g, r, _ref;
       _ref = this.options, r = _ref.r, g = _ref.g, b = _ref.b, a = _ref.a, button = _ref.button;
       this.hsb = ColorMath.rgbToHSB({
@@ -189,7 +189,7 @@
         }
       }, this));
     };
-    ColorPicker.prototype.open = function(e) {
+    NitPicker.prototype.open = function(e) {
       var left, m, pos, target, top, viewPort;
       if (e) {
         e.preventDefault();
@@ -220,11 +220,11 @@
       this.open = true;
       return ($(document)).bind("mousedown", this.blur);
     };
-    ColorPicker.prototype.close = function() {
+    NitPicker.prototype.close = function() {
       $(this.el).hide();
       return this.open = false;
     };
-    ColorPicker.prototype.cancel = function(e) {
+    NitPicker.prototype.cancel = function(e) {
       var hsb;
       hsb = this.hsb;
       hsb = _.extend({}, this.original_hsb);
@@ -235,13 +235,13 @@
       this.change(e);
       return this.close();
     };
-    ColorPicker.prototype.accept = function() {
+    NitPicker.prototype.accept = function() {
       this.original_hsb = _.clone(this.hsb);
       this.original_alpha = this.$("div.nitpicker_rgb_a input").val();
       this.close();
       return this.onAccept.call(this, this.getRGB(), ColorMath.hsbToHex(this.hsb), this.alpha);
     };
-    ColorPicker.prototype.blur = function(e) {
+    NitPicker.prototype.blur = function(e) {
       var el, target;
       target = e.target;
       el = this.el;
@@ -250,7 +250,7 @@
         return this.close();
       }
     };
-    ColorPicker.prototype.render = function() {
+    NitPicker.prototype.render = function() {
       var context, _template;
       _template = _.template(template);
       context = ColorMath.hsbToRGB(this.hsb);
@@ -260,7 +260,7 @@
       this.change();
       return this;
     };
-    ColorPicker.prototype.setPalette = function() {
+    NitPicker.prototype.setPalette = function() {
       var hsb;
       hsb = this.hsb;
       this.$('div.nitpicker_color').css('backgroundColor', '#' + (ColorMath.hsbToHex({
@@ -276,12 +276,12 @@
         backgroundColor: '#' + this.$('input.hex').val()
       });
     };
-    ColorPicker.prototype.setHue = function() {
+    NitPicker.prototype.setHue = function() {
       var hsb;
       hsb = this.hsb;
       return this.$('div.nitpicker_hue div').css('top', parseInt(150 - 150 * hsb.h / 360, 10));
     };
-    ColorPicker.prototype.getRGB = function() {
+    NitPicker.prototype.getRGB = function() {
       var rgb_row;
       rgb_row = this.$('div.rgb_row input');
       return {
@@ -290,15 +290,15 @@
         b: parseInt(rgb_row.eq(2).val(), 10)
       };
     };
-    ColorPicker.prototype.setRGB = function() {
+    NitPicker.prototype.setRGB = function() {
       var rgb;
       rgb = ColorMath.hsbToRGB(this.hsb);
       return this.$('div.rgb_row input').eq(0).val(rgb.r).end().eq(1).val(rgb.g).end().eq(2).val(rgb.b).end();
     };
-    ColorPicker.prototype.setHex = function() {
+    NitPicker.prototype.setHex = function() {
       return this.$('input.hex').val(ColorMath.hsbToHex(this.hsb));
     };
-    ColorPicker.prototype.change = function(e) {
+    NitPicker.prototype.change = function(e) {
       var target, targetClass;
       if (e) {
         target = $(e.target);
@@ -317,7 +317,7 @@
         return this.onChange.call(this, this.getRGB(), ColorMath.hsbToHex(this.hsb), this.alpha);
       }
     };
-    ColorPicker.prototype.downHue = function(e) {
+    NitPicker.prototype.downHue = function(e) {
       var current;
       e.preventDefault();
       current = {
@@ -326,19 +326,19 @@
       $(document).bind('mouseup', current, this.upHue);
       return $(document).bind('mousemove', current, this.moveHue);
     };
-    ColorPicker.prototype.moveHue = function(e) {
+    NitPicker.prototype.moveHue = function(e) {
       e.preventDefault();
       this.hsb.h = parseInt(360 * ((150 - (Math.max(0, Math.min(150, e.pageY - e.data.y)))) / 150), 10);
       return this.change(e);
     };
-    ColorPicker.prototype.upHue = function(e) {
+    NitPicker.prototype.upHue = function(e) {
       e.preventDefault();
       this.setRGB();
       this.setHex();
       $(document).unbind('mouseup', this.upHue);
       return $(document).unbind('mousemove', this.moveHue);
     };
-    ColorPicker.prototype.downSelector = function(e) {
+    NitPicker.prototype.downSelector = function(e) {
       var current;
       e.preventDefault();
       current = {
@@ -347,20 +347,20 @@
       $(document).bind('mouseup', current, this.upSelector);
       return $(document).bind('mousemove', current, this.moveSelector);
     };
-    ColorPicker.prototype.moveSelector = function(e) {
+    NitPicker.prototype.moveSelector = function(e) {
       e.preventDefault();
       this.hsb.b = parseInt(100 * ((150 - (Math.max(0, Math.min(150, e.pageY - e.data.pos.top)))) / 150), 10);
       this.hsb.s = parseInt(100 * (Math.max(0, Math.min(150, e.pageX - e.data.pos.left))) / 150, 10);
       return this.change(e);
     };
-    ColorPicker.prototype.upSelector = function(e) {
+    NitPicker.prototype.upSelector = function(e) {
       e.preventDefault();
       this.setRGB();
       this.setHex();
       $(document).unbind('mouseup', this.upSelector);
       return $(document).unbind('mousemove', this.moveSelector);
     };
-    ColorPicker.prototype.changeAlpha = function(e) {
+    NitPicker.prototype.changeAlpha = function(e) {
       var adjusted, alpha, key_code;
       alpha = Number($(e.target).val());
       key_code = e.keyCode;
@@ -391,10 +391,10 @@
       }
       return this.change(e);
     };
-    ColorPicker.prototype.clearOpacity = function(e) {
+    NitPicker.prototype.clearOpacity = function(e) {
       e.preventDefault();
       return this.$("div.nitpicker_rgb_a input").val("0").trigger("keyup");
     };
-    return ColorPicker;
+    return NitPicker;
   })();
 }).call(this);
