@@ -1,4 +1,4 @@
-.colorpicker {
+.nitpicker {
     width: 320px;
     height: 175px;
     overflow:hidden;
@@ -12,13 +12,13 @@
      */
 }
 
-.colorpicker_nav {
+.nitpicker .nitpicker_nav {
 	position: absolute;
 	top: 3px;
 	right: 5px;
 }
 
-.colorpicker_nav a {
+.nitpicker .nitpicker_nav a {
     text-decoration:none;
     background-color:#dedede;
     width:14px;
@@ -31,19 +31,19 @@
     font-size:12px;
 }
 
-.colorpicker_nav a:hover {
+.nitpicker .nitpicker_nav a:hover {
     background-color:#fff;
 }
 
-.colorpicker_nav a.colorpicker_cancel {
+.nitpicker .nitpicker_nav a.nitpicker_cancel {
     color:#bb0000;
 }
 
-.colorpicker_nav a.colorpicker_accept {
+.nitpicker .nitpicker_nav a.nitpicker_accept {
     color:#008800;
 }
 
-.colorpicker_color {
+.nitpicker .nitpicker_color {
 	position: absolute;
 	top: 10px;
 	left: 10px;
@@ -54,7 +54,7 @@
 	cursor: crosshair;
 }
 
-.colorpicker_color .alpha_channel {
+.nitpicker .nitpicker_color .alpha_channel {
 	position: absolute;
 	top: 0px;
 	left: 0px;
@@ -63,25 +63,25 @@
 	background: transparent url(../img/transparent.png);
 }
 
-.colorpicker_color div {
+.nitpicker .nitpicker_color div {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 150px;
 	height: 150px;
-	background: url(../img/colorpicker_overlay.png);
+	background: url(../img/nitpicker_overlay.png);
 }
-.colorpicker_color div div {
+.nitpicker .nitpicker_color div div {
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 11px;
 	height: 11px;
 	overflow: hidden;
-	background: url(../img/colorpicker_select.gif);
+	background: url(../img/nitpicker_select.gif);
 	margin: -5px 0 0 -5px;
 }
-.colorpicker_hue {
+.nitpicker .nitpicker_hue {
 	background: url(../img/hue.png) center no-repeat;
 	position: absolute;
 	top: 10px;
@@ -90,21 +90,21 @@
 	height: 150px;
 	cursor: n-resize;
 }
-.colorpicker_hue div {
+.nitpicker .nitpicker_hue div {
 	position: absolute;
 	width: 35px;
 	height: 9px;
 	overflow: hidden;
-	background: url(../img/colorpicker_indic.gif) left top;
+	background: url(../img/nitpicker_indic.gif) left top;
 	margin: -4px 0 0 0;
 	left: 0px;
 }
-.colorpicker_fields {
+.nitpicker .nitpicker_fields {
 	position: absolute;
     left:215px;
     top:22px;
 }
-.colorpicker input {
+.nitpicker input {
 	font-size: 13px;
 	font-family: Arial, Helvetica, sans-serif;
 	text-align: center;
@@ -117,47 +117,70 @@
     color:#ccc;
 }
 
-.colorpicker input.hex {
+.nitpicker input.hex {
 	font-size: 11px;
 }
 
-.colorpicker_fields label {
+.nitpicker .nitpicker_fields label {
     font-size:13px;
     color:#ccc;
     width:15px;
     padding-top:3px;
 }
 
-.rgb_row, .hex_row {
+.nitpicker .rgb_row, .nitpicker .hex_row {
     margin-bottom:5px;
 }
 
-.rgb_row div, .hex_row div {
+.nitpicker .rgb_row div, .nitpicker .hex_row div {
     margin:3px 4px 6px 0;
     clear:left;
     height:22px;
 }
 
-.rgb_row div *, .hex_row div * {
+.nitpicker .rgb_row div *, .nitpicker .hex_row div * {
     display:block;
     float:left;
 }
 
-.hex_row {
+.nitpicker .hex_row {
     width:95px;
 }
 
-div.button_wrap {
+.nitpicker div.button_wrap {
     float:right;
     margin:0;
     padding:0;
 }
 
-div.button_wrap a {
+.nitpicker div.button_wrap a {
     font-size:12px;
     border:1px solid black;
     background:url(../img/disable.png) center;
     display:block;
     height:20px;
     width:20px;
+}
+
+.nitpicker-widget div {
+    height:30px;
+    left:3px;
+    position:absolute;
+    top:3px;
+    width:30px;
+}
+
+.nitpicker-widget div.frame {
+    background:url("../img/select.png") repeat scroll center center transparent;
+}
+
+.nitpicker-widget div.content.disabled {
+    background:url("../img/disable.png") repeat scroll center center transparent;
+}
+
+.nitpicker-widget div.content .transparency {
+    background:url("../img/transparent-small.png") repeat scroll center center transparent;
+    overflow:hidden;
+    width:22px;
+    height:22px;
 }

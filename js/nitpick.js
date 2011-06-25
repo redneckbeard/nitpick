@@ -119,7 +119,7 @@
     };
     return ColorMath;
   })();
-  template = "<div class=\"colorpicker_nav\">\n    <a class=\"colorpicker_accept\" href=\"#\">&#x2714;</a>\n    <a class=\"colorpicker_cancel\" href=\"#\">&#x2718;</a>\n</div>\n<div class=\"colorpicker_color\" style=\"background-color: rgb(255, 0, 0); \">\n    <div>\n        <div></div>\n    </div>\n    <div class=\"alpha_channel\"></div>\n</div>\n\n<div class=\"colorpicker_hue\">\n    <div style=\"top: 150px; \">\n    </div>\n</div>\n\n<div class=\"colorpicker_fields\">\n    <div class=\"rgb_row\">\n        <div class=\"colorpicker_rgb_r\">\n        <label>R</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= r %>\" />\n        </div>\n        <div class=\"colorpicker_rgb_g\">\n        <label>G</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= g %>\" />\n        </div>\n        <div class=\"colorpicker_rgb_b\">\n        <label>B</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= b %>\" />\n        </div>\n        <div class=\"colorpicker_rgb_a\">\n        <label>A</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= a %>\" /><label>%</label>\n        </div>\n    </div>\n\n    <div class=\"hex_row\">\n        <div class=\"button_wrap\">\n        <a href=\"#\"></a>\n        </div>\n        <div>\n            <label>#</label>\n            <input class=\"hex\" type=\"text\" maxlength=\"6\" size=\"6\" value=\"<%= hex %>\">\n        </div>\n    </div>\n\n    </div>\n</div>";
+  template = "<div class=\"nitpicker_nav\">\n    <a class=\"nitpicker_accept\" href=\"#\">&#x2714;</a>\n    <a class=\"nitpicker_cancel\" href=\"#\">&#x2718;</a>\n</div>\n<div class=\"nitpicker_color\" style=\"background-color: rgb(255, 0, 0); \">\n    <div>\n        <div></div>\n    </div>\n    <div class=\"alpha_channel\"></div>\n</div>\n\n<div class=\"nitpicker_hue\">\n    <div style=\"top: 150px; \">\n    </div>\n</div>\n\n<div class=\"nitpicker_fields\">\n    <div class=\"rgb_row\">\n        <div class=\"nitpicker_rgb_r\">\n        <label>R</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= r %>\" />\n        </div>\n        <div class=\"nitpicker_rgb_g\">\n        <label>G</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= g %>\" />\n        </div>\n        <div class=\"nitpicker_rgb_b\">\n        <label>B</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= b %>\" />\n        </div>\n        <div class=\"nitpicker_rgb_a\">\n        <label>A</label>\n        <input class=\"rgb\" type=\"text\" maxlength=\"3\" size=\"3\" value=\"<%= a %>\" /><label>%</label>\n        </div>\n    </div>\n\n    <div class=\"hex_row\">\n        <div class=\"button_wrap\">\n        <a href=\"#\"></a>\n        </div>\n        <div>\n            <label>#</label>\n            <input class=\"hex\" type=\"text\" maxlength=\"6\" size=\"6\" value=\"<%= hex %>\">\n        </div>\n    </div>\n\n    </div>\n</div>";
   Proxy = (function() {
     __extends(Proxy, Backbone.Events);
     function Proxy() {
@@ -153,15 +153,15 @@
       ColorPicker.__super__.constructor.apply(this, arguments);
     }
     ColorPicker.prototype.tagName = "div";
-    ColorPicker.prototype.className = "colorpicker";
+    ColorPicker.prototype.className = "nitpicker";
     ColorPicker.prototype.events = {
-      "mousedown div.colorpicker_hue": "downHue",
-      "mousedown div.colorpicker_color": "downSelector",
+      "mousedown div.nitpicker_hue": "downHue",
+      "mousedown div.nitpicker_color": "downSelector",
       "change input": "change",
-      "keyup div.colorpicker_rgb_a input": "changeAlpha",
+      "keyup div.nitpicker_rgb_a input": "changeAlpha",
       "click div.button_wrap a": "clearOpacity",
-      "click a.colorpicker_cancel": "cancel",
-      "click a.colorpicker_accept": "accept"
+      "click a.nitpicker_cancel": "cancel",
+      "click a.nitpicker_accept": "accept"
     };
     ColorPicker.prototype.onChange = function() {};
     ColorPicker.prototype.onCancel = function() {};
@@ -176,9 +176,11 @@
       });
       this.original_hsb = _.clone(this.hsb);
       this.original_alpha = this.alpha = a;
-      $(button).click(this.open);
+      this.button = button;
+      this.button.addClass("nitpicker-widget").html("<div class=\"content\">\n    <div class=\"transparency\"></div>\n</div>\n<div class=\"frame\"></div>");
+      $(this.button).click(this.open);
       this.render();
-      this.$("div.colorpicker_rgb_a input").val(a).trigger("keyup");
+      this.$("div.nitpicker_rgb_a input").val(a).trigger("keyup");
       $("body").append(this.el);
       this.close();
       return Proxy.bind("open", __bind(function(sender) {
@@ -226,7 +228,7 @@
       var hsb;
       hsb = this.hsb;
       hsb = _.extend({}, this.original_hsb);
-      this.$("div.colorpicker_rgb_a input").val(this.original_alpha).trigger("keyup");
+      this.$("div.nitpicker_rgb_a input").val(this.original_alpha).trigger("keyup");
       this.alpha = this.original_alpha;
       console.log(hsb, this.original_hsb);
       this.hsb = hsb;
@@ -235,7 +237,7 @@
     };
     ColorPicker.prototype.accept = function() {
       this.original_hsb = _.clone(this.hsb);
-      this.original_alpha = this.$("div.colorpicker_rgb_a input").val();
+      this.original_alpha = this.$("div.nitpicker_rgb_a input").val();
       this.close();
       return this.onAccept.call(this, this.getRGB(), ColorMath.hsbToHex(this.hsb), this.alpha);
     };
@@ -261,20 +263,23 @@
     ColorPicker.prototype.setPalette = function() {
       var hsb;
       hsb = this.hsb;
-      this.$('div.colorpicker_color').css('backgroundColor', '#' + (ColorMath.hsbToHex({
+      this.$('div.nitpicker_color').css('backgroundColor', '#' + (ColorMath.hsbToHex({
         h: hsb.h,
         s: 100,
         b: 100
       })));
-      return this.$('div.colorpicker_color div div').css({
+      this.$('div.nitpicker_color div div').css({
         left: parseInt(150 * hsb.s / 100, 10),
         top: parseInt(150 * (100 - hsb.b) / 100, 10)
+      });
+      return this.button.find('div.content').css({
+        backgroundColor: '#' + this.$('input.hex').val()
       });
     };
     ColorPicker.prototype.setHue = function() {
       var hsb;
       hsb = this.hsb;
-      return this.$('div.colorpicker_hue div').css('top', parseInt(150 - 150 * hsb.h / 360, 10));
+      return this.$('div.nitpicker_hue div').css('top', parseInt(150 - 150 * hsb.h / 360, 10));
     };
     ColorPicker.prototype.getRGB = function() {
       var rgb_row;
@@ -377,11 +382,18 @@
       }
       this.alpha = alpha;
       this.$("div.alpha_channel").fadeTo(0, (100 - alpha) / 100);
+      if (alpha === 0) {
+        this.button.find('div.content').addClass("disabled");
+        this.button.find("div.transparency").fadeTo(0, 0);
+      } else {
+        this.button.find('div.content').removeClass("disabled");
+        this.button.find("div.transparency").fadeTo(0, (100 - alpha) / 100);
+      }
       return this.change(e);
     };
     ColorPicker.prototype.clearOpacity = function(e) {
       e.preventDefault();
-      return this.$("div.colorpicker_rgb_a input").val("0").trigger("keyup");
+      return this.$("div.nitpicker_rgb_a input").val("0").trigger("keyup");
     };
     return ColorPicker;
   })();

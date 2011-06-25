@@ -4,16 +4,16 @@ class Proxy extends Backbone.Events
 
 class this.ColorPicker extends Backbone.View
     tagName: "div"
-    className: "colorpicker"
+    className: "nitpicker"
 
-    events: 
-        "mousedown div.colorpicker_hue": "downHue"
-        "mousedown div.colorpicker_color": "downSelector"
+    events:
+        "mousedown div.nitpicker_hue": "downHue"
+        "mousedown div.nitpicker_color": "downSelector"
         "change input": "change"
-        "keyup div.colorpicker_rgb_a input": "changeAlpha"
+        "keyup div.nitpicker_rgb_a input": "changeAlpha"
         "click div.button_wrap a": "clearOpacity"
-        "click a.colorpicker_cancel": "cancel"
-        "click a.colorpicker_accept": "accept"
+        "click a.nitpicker_cancel": "cancel"
+        "click a.nitpicker_accept": "accept"
 
     onChange: ->
 
@@ -26,9 +26,15 @@ class this.ColorPicker extends Backbone.View
         @hsb = ColorMath.rgbToHSB {r, g, b}
         @original_hsb = _.clone @hsb
         @original_alpha = @alpha = a
-        $(button).click(@open)
+        @button = button
+        @button.addClass("nitpicker-widget").html """
+            <div class="content">
+                <div class="transparency"></div>
+            </div>
+            <div class="frame"></div>"""
+        $(@button).click @open
         @render()
-        @$("div.colorpicker_rgb_a input").val(a).trigger("keyup")
+        @$("div.nitpicker_rgb_a input").val(a).trigger "keyup"
         $("body").append @el
         @close()
         Proxy.bind "open", (sender) =>
@@ -65,15 +71,16 @@ class this.ColorPicker extends Backbone.View
     cancel: (e) =>
         hsb = @hsb
         hsb = _.extend {}, @original_hsb
-        @$("div.colorpicker_rgb_a input").val(@original_alpha).trigger("keyup")
+        @$("div.nitpicker_rgb_a input").val(@original_alpha).trigger "keyup"
         @alpha = @original_alpha
+        console.log hsb, @original_hsb
         @hsb = hsb
         @change e
         @close()
 
     accept: =>
-        @original_hsb = _.clone @hsb 
-        @original_alpha = @$("div.colorpicker_rgb_a input").val()
+        @original_hsb = _.clone @hsb
+        @original_alpha = @$("div.nitpicker_rgb_a input").val()
         @close()
         @onAccept.call @, @getRGB(), (ColorMath.hsbToHex @hsb), @alpha
 
@@ -94,21 +101,18 @@ class this.ColorPicker extends Backbone.View
         @change()
         @
 
-    # Conversion methods to and from base-10 RGB, hex RGB, and HSB.
-
-    # All aspects of the color picker (palette, hue bar, rgb fields, hex field,
-    # and status button) need setter methods.
     setPalette: =>
         hsb = @hsb
-        @$('div.colorpicker_color').css 'backgroundColor', '#' + (ColorMath.hsbToHex {h: hsb.h, s: 100, b: 100})
-        @$('div.colorpicker_color div div').css {
+        @$('div.nitpicker_color').css 'backgroundColor', '#' + (ColorMath.hsbToHex {h: hsb.h, s: 100, b: 100})
+        @$('div.nitpicker_color div div').css {
             left: parseInt 150 * hsb.s/100, 10
             top: parseInt 150 * (100-hsb.b)/100, 10
         }
+        @button.find('div.content').css {backgroundColor: '#' + @$('input.hex').val()}
 
     setHue: =>
         hsb = @hsb
-        @$('div.colorpicker_hue div').css 'top', (parseInt 150 - 150 * hsb.h/360, 10)
+        @$('div.nitpicker_hue div').css 'top', (parseInt 150 - 150 * hsb.h/360, 10)
 
 
     getRGB: =>
@@ -200,8 +204,14 @@ class this.ColorPicker extends Backbone.View
             $(e.target).val alpha
         @alpha = alpha
         @$("div.alpha_channel").fadeTo 0, (100 - alpha) / 100
+        if alpha is 0
+            @button.find('div.content').addClass "disabled"
+            @button.find("div.transparency").fadeTo 0, 0
+        else
+            @button.find('div.content').removeClass "disabled"
+            @button.find("div.transparency").fadeTo 0, (100 - alpha) / 100
         @change e
 
     clearOpacity: (e) =>
-        e.preventDefault() 
-        @$("div.colorpicker_rgb_a input").val("0").trigger("keyup")
+        e.preventDefault()
+        @$("div.nitpicker_rgb_a input").val("0").trigger "keyup"
