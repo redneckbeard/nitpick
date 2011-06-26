@@ -68,6 +68,6 @@ If you want to hack on Nitpick, you will need to install, in this order:
 * `sudo npm install -g coffee-script`
 * `sudo npm install -g uglifyjs`
 
-A Cake file is provide that concatenates the three `.coffee` files, compiles
-them to JavaScript as `js/nitpick.js`, and additional produces a minified
-version using uglify-js.
+A Cake file is provided and gives you a `cake build` command that concatenates
+the three `.coffee` files, compiles them to JavaScript as `js/nitpick.js`, and
+additional produces a minified version using uglify-js.
